@@ -7,34 +7,25 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
-            --primary: #1a3c52;
-            --primary-light: #2a7a6e;
-            --accent: #d4874e;
-            --bg-panel: #f8f9fb;
-            --text: #1e2d3a;
-            --text-light: #6b7d8e;
-            --border: #dde3ea;
+            --primary: #1a3c52; --primary-light: #2a7a6e; --bg-panel: #f8f9fb;
+            --text: #1e2d3a; --text-light: #6b7d8e; --border: #dde3ea;
             --shadow: 0 2px 16px rgba(0,0,0,0.1);
         }
-
         body { font-family: 'Be Vietnam Pro', sans-serif; background: #eef1f5; color: var(--text); }
 
         .header {
             background: linear-gradient(135deg, #0f2b3c 0%, #1a5c4a 60%, #1e6e55 100%);
             color: white; padding: 10px 20px;
             display: flex; align-items: center; justify-content: space-between;
-            position: relative; z-index: 1000;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            position: relative; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.2);
         }
         .header-left { display: flex; align-items: center; gap: 12px; }
         .header-logo {
-            width: 38px; height: 38px;
-            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+            width: 38px; height: 38px; background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
         }
         .header h1 { font-size: 13px; font-weight: 600; letter-spacing: 0.5px; opacity: 0.8; }
         .header h2 { font-size: 14px; font-weight: 600; letter-spacing: 0.3px; margin-top: 1px; }
@@ -50,8 +41,7 @@
         #map { flex: 1; z-index: 1; }
 
         .sidebar {
-            width: 310px; background: var(--bg-panel);
-            border-right: 1px solid var(--border);
+            width: 320px; background: var(--bg-panel); border-right: 1px solid var(--border);
             overflow-y: auto; z-index: 500; transition: transform 0.3s ease;
         }
         .sidebar-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
@@ -140,9 +130,9 @@
             font-weight: 700; font-size: 13.5px; color: var(--primary);
             margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid #e8ecf0;
         }
-        .popup-row { display: flex; justify-content: space-between; padding: 3px 0; }
-        .popup-label { color: #7b8d9e; font-size: 11.5px; }
-        .popup-value { font-weight: 500; font-size: 11.5px; text-align: right; max-width: 60%; }
+        .popup-row { display: flex; justify-content: space-between; padding: 3px 0; gap: 12px; }
+        .popup-label { color: #7b8d9e; font-size: 11.5px; white-space: nowrap; }
+        .popup-value { font-weight: 500; font-size: 11.5px; text-align: right; }
 
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -159,8 +149,8 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
-            .header h1 { font-size: 13px; }
-            .header-subtitle { display: none; }
+            .header h1 { font-size: 11px; }
+            .header h2 { font-size: 12px; }
             .header-right { display: none; }
             .sidebar {
                 position: absolute; left: 0; top: 0; height: 100%;
@@ -218,7 +208,7 @@
         </div>
 
         <div class="sidebar-section">
-            <div class="section-title">Chú giải loại đất</div>
+            <div class="section-title">Chú giải</div>
             <div class="legend-grid" id="legend-grid"></div>
         </div>
 
@@ -229,7 +219,7 @@
 
         <div class="sidebar-section">
             <div class="info-box">
-                <strong>Hướng dẫn:</strong> Click vào thửa đất để xem thuộc tính. Bật/tắt lớp bản đồ ở trên. Dùng chuột hoặc ngón tay để kéo, zoom.
+                <strong>Hướng dẫn:</strong> Bật/tắt lớp bản đồ ở trên. Click vào đối tượng để xem thuộc tính. Dùng chuột hoặc ngón tay để kéo, zoom.
             </div>
         </div>
     </div>
@@ -241,28 +231,75 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 
-const LAND_COLORS = {
+// ============================================================
+// MÀU SẮC
+// ============================================================
+
+// Địa chính
+const DC_COLORS = {
     'ONT':'#e8524a','ONT+CLN':'#f0866e','CLN':'#66bb6a','RSX':'#2e7d32',
     'HNK':'#a5d6a7','DGT':'#bdbdbd','DTL':'#42a5f5','NTS':'#29b6f6',
     'NTD':'#0288d1','TMD':'#ff9800','DGD':'#ab47bc','DVH':'#ec407a',
     'DNL':'#8d6e63','BCS':'#78909c','TSC':'#455a64','DCH':'#ffd54f',
     'SKC':'#ff7043','SKX':'#ff5722','DBV':'#4caf50'
 };
-
-const LAND_NAMES = {
-    'ONT':'Đất ở nông thôn','ONT+CLN':'Đất ở + Cây lâu năm','CLN':'Cây lâu năm',
-    'RSX':'Rừng sản xuất','HNK':'Cây hàng năm khác','DGT':'Đất giao thông',
-    'DTL':'Đất thủy lợi','NTS':'Nuôi trồng thủy sản','NTD':'Nuôi trồng khác',
-    'TMD':'Thương mại dịch vụ','DGD':'Đất giáo dục','DVH':'Đất văn hóa',
-    'DNL':'Đất năng lượng','BCS':'Bằng chưa sử dụng','TSC':'Trụ sở cơ quan',
-    'DCH':'Đất chợ','SKC':'Sản xuất kinh doanh','SKX':'Đất SKC xây dựng','DBV':'Đất bảo vệ'
+const DC_NAMES = {
+    'ONT':'Đất ở nông thôn','ONT+CLN':'Đất ở + CLN','CLN':'Cây lâu năm',
+    'RSX':'Rừng sản xuất','HNK':'Cây hàng năm','DGT':'Giao thông',
+    'DTL':'Thủy lợi','NTS':'Nuôi trồng TS','NTD':'Nuôi trồng khác',
+    'TMD':'Thương mại DV','DGD':'Giáo dục','DVH':'Văn hóa',
+    'DNL':'Năng lượng','BCS':'Chưa sử dụng','TSC':'Trụ sở CQ',
+    'DCH':'Đất chợ','SKC':'SX kinh doanh','SKX':'SKC xây dựng','DBV':'Bảo vệ'
 };
 
-const PROP_LABELS = {
+// QH Phân khu HL05-06
+const PK_COLORS = {
+    'ONT':'#ff5252','SON':'#ff8a80','HH':'#ff6e40','DKV':'#69f0ae',
+    'DGD':'#b388ff','DYT':'#ff80ab','TMD':'#ffab40','DHT':'#80d8ff',
+    'DVH':'#ea80fc','DVO':'#ffd740','DTT':'#84ffff','DGT':'#cfd8dc',
+    'CQP':'#8d6e63','MNC':'#40c4ff','CCC':'#a1887f','DLN':'#4caf50',
+    'TIN':'#9e9e9e','TSC':'#546e7a'
+};
+const PK_NAMES = {
+    'ONT':'Đất ở nông thôn','SON':'Đất ở sinh thái','HH':'Hỗn hợp',
+    'DKV':'Cây xanh, khu vực','DGD':'Giáo dục','DYT':'Y tế',
+    'TMD':'Thương mại DV','DHT':'Hạ tầng','DVH':'Văn hóa',
+    'DVO':'Đất khác','DTT':'Thể dục TT','DGT':'Giao thông',
+    'CQP':'Quốc phòng','MNC':'Mặt nước','CCC':'Công cộng',
+    'DLN':'Lâm nghiệp','TIN':'Tín ngưỡng','TSC':'Trụ sở CQ'
+};
+
+// QH Chung
+const QC_COLORS = {
+    'DOLX DTH':'#ff7043','@ Nong Nghiep':'#a5d6a7','@ matnuoc hat':'#4fc3f7',
+    '@ hoa mau':'#c5e1a5','Duong Giao Thong, Thuy Loi':'#bdbdbd',
+    '9 O Moi':'#ef5350','@- DAT CAY XANH CANH QUAN':'#66bb6a',
+    '@ Cong Cong':'#ffab91','H-Ko XD':'#e0e0e0','@ truong hoc':'#ce93d8',
+    '@ DAT BENH VIEN':'#f48fb1','Du Lich':'#80cbc4',
+    'Dat Nuoi Trong Thuy San':'#4dd0e1','Dat Trang Trai':'#a5d6a7',
+    'Dat Co Quan':'#90a4ae','Dat Gian Dan':'#ffcc80',
+    '@ ngiadia hat':'#bcaaa4','@ Lam Nghiep':'#2e7d32',
+    'Ha Tang Ky Thuat':'#78909c','H-Ton Giao':'#d7ccc8',
+    'Dat Cong Vien Cay Xanh':'#81c784','BAI TAP KET VAT LIEU':'#b0bec5',
+    'Dat Giao Thong, Thuy Loi':'#9e9e9e','Dat ho tro sx':'#dce775',
+    '@_hoa mau':'#c5e1a5','Dat Ho Tro San Xuat':'#dce775',
+    'Dat Cay An Qua':'#aed581','Trung Tam Phat Trien Nong Nghiep':'#7cb342',
+    'Nói':'#8d6e63'
+};
+
+// ============================================================
+// POPUP LABELS
+// ============================================================
+
+const DC_PROP_LABELS = {
     'SHTHUA':'Số thửa','SHBANDO':'Tờ bản đồ','DIENTICH':'Diện tích (m²)',
     'KHLOAIDAT':'Loại đất','TENCHU':'Chủ sử dụng','DIACHI':'Địa chỉ',
     'XAID':'Mã xã','DaCapGCN':'Đã cấp GCN'
 };
+
+// ============================================================
+// BẢN ĐỒ
+// ============================================================
 
 const map = L.map('map', { center: [20.9455, 105.5554], zoom: 15, zoomControl: false });
 L.control.zoom({ position: 'topright' }).addTo(map);
@@ -284,26 +321,27 @@ function switchBasemap(name) {
     document.getElementById('radio-' + name).classList.add('selected');
 }
 
+// ============================================================
+// LAYER MANAGEMENT
+// ============================================================
+
 const layerObjects = {};
 
 const LAYERS_CONFIG = [
-    { id: 'diachinh', name: 'Bản đồ địa chính', desc: 'Thửa đất — địa chính', file: 'data/diachinh.geojson', visible: true },
-    // Bỏ comment khi có file:
-    // { id: 'qhpk', name: 'QH Phân khu HL05-06', desc: 'Quy hoạch phân khu', file: 'data/quy-hoach-phan-khu.geojson', visible: true },
-    // { id: 'qhsdd', name: 'QH Sử dụng đất', desc: 'Quy hoạch sử dụng đất', file: 'data/quy-hoach-su-dung-dat.geojson', visible: false },
-    // { id: 'qhc', name: 'Quy hoạch chung', desc: 'Quy hoạch chung', file: 'data/quy-hoach-chung.geojson', visible: false },
+    { id: 'diachinh', name: 'Bản đồ địa chính', desc: '4.323 thửa đất', file: 'data/diachinh.geojson', visible: true, order: 1 },
+    { id: 'qhpk', name: 'QH Phân khu HL05-06', desc: '412 ô quy hoạch', file: 'data/HL05_HL06.geojson', visible: false, order: 2 },
+    { id: 'qhc', name: 'Quy hoạch chung', desc: '855 ô quy hoạch', file: 'data/QH_CHUNG.geojson', visible: false, order: 3 },
 ];
 
-function getColor(code) { return LAND_COLORS[code] || '#90a4ae'; }
-
-function createPopup(props) {
+// Popup builders
+function dcPopup(props) {
     const fields = ['SHTHUA','SHBANDO','DIENTICH','KHLOAIDAT','TENCHU','DIACHI','XAID','DaCapGCN'];
     let html = `<div class="popup-header">Thửa ${props.SHTHUA||'?'} — Tờ ${props.SHBANDO||'?'}</div>`;
     fields.forEach(key => {
         let val = props[key];
         if (val === null || val === undefined || val === '') return;
-        let label = PROP_LABELS[key] || key;
-        if (key === 'KHLOAIDAT') val = `${val} (${LAND_NAMES[val]||val})`;
+        let label = DC_PROP_LABELS[key] || key;
+        if (key === 'KHLOAIDAT') val = `${val} (${DC_NAMES[val]||val})`;
         if (key === 'DIENTICH') val = Number(val).toLocaleString('vi-VN') + ' m²';
         if (key === 'DaCapGCN') val = val == 1 ? 'Đã cấp' : 'Chưa cấp';
         html += `<div class="popup-row"><span class="popup-label">${label}</span><span class="popup-value">${val}</span></div>`;
@@ -311,45 +349,128 @@ function createPopup(props) {
     return html;
 }
 
-function highlightFeature(e) { e.target.setStyle({ weight: 2.5, color: '#ffd600', fillOpacity: 0.85 }); e.target.bringToFront(); }
-function resetHighlight(e) { if (layerObjects['diachinh']) layerObjects['diachinh'].leafletLayer.resetStyle(e.target); }
+function pkPopup(props) {
+    let loai = props.DTSD || '';
+    let ten = PK_NAMES[loai] || loai;
+    let tenChu = props.TENCHU || '';
+    let html = `<div class="popup-header">QH Phân khu HL05-06</div>`;
+    html += `<div class="popup-row"><span class="popup-label">Ký hiệu</span><span class="popup-value">${loai}</span></div>`;
+    html += `<div class="popup-row"><span class="popup-label">Chức năng</span><span class="popup-value">${ten}</span></div>`;
+    if (tenChu) html += `<div class="popup-row"><span class="popup-label">Mô tả</span><span class="popup-value">${tenChu}</span></div>`;
+    return html;
+}
+
+function qcPopup(props) {
+    let ten = props.TENCHU || '';
+    let html = `<div class="popup-header">Quy hoạch chung</div>`;
+    html += `<div class="popup-row"><span class="popup-label">Loại đất</span><span class="popup-value">${ten}</span></div>`;
+    return html;
+}
+
+// Style & highlight
+function highlightFeature(e) { e.target.setStyle({ weight: 3, color: '#ffd600', fillOpacity: 0.85 }); e.target.bringToFront(); }
 
 async function loadLayer(config) {
     try {
         const resp = await fetch(config.file);
         if (!resp.ok) throw new Error('File not found');
         const data = await resp.json();
-        const leafletLayer = L.geoJSON(data, {
-            style: f => ({ color: '#fff', weight: 0.8, fillColor: getColor(f.properties.KHLOAIDAT||''), fillOpacity: 0.6 }),
-            onEachFeature: (feature, layer) => {
-                layer.bindPopup(createPopup(feature.properties), { maxWidth: 300 });
-                layer.on({ mouseover: highlightFeature, mouseout: resetHighlight });
-            }
-        });
+
+        let leafletLayer;
+
+        if (config.id === 'diachinh') {
+            leafletLayer = L.geoJSON(data, {
+                style: f => ({ color: '#fff', weight: 0.8, fillColor: DC_COLORS[f.properties.KHLOAIDAT] || '#90a4ae', fillOpacity: 0.55 }),
+                onEachFeature: (f, layer) => {
+                    layer.bindPopup(dcPopup(f.properties), { maxWidth: 300 });
+                    layer.on({ mouseover: highlightFeature, mouseout: e => leafletLayer.resetStyle(e.target) });
+                }
+            });
+        } else if (config.id === 'qhpk') {
+            leafletLayer = L.geoJSON(data, {
+                style: f => ({ color: '#fff', weight: 1.5, fillColor: PK_COLORS[f.properties.DTSD] || '#90a4ae', fillOpacity: 0.5 }),
+                onEachFeature: (f, layer) => {
+                    layer.bindPopup(pkPopup(f.properties), { maxWidth: 300 });
+                    layer.on({ mouseover: highlightFeature, mouseout: e => leafletLayer.resetStyle(e.target) });
+                }
+            });
+        } else if (config.id === 'qhc') {
+            leafletLayer = L.geoJSON(data, {
+                style: f => ({ color: '#fff', weight: 1, fillColor: QC_COLORS[f.properties.TENCHU] || '#90a4ae', fillOpacity: 0.45 }),
+                onEachFeature: (f, layer) => {
+                    layer.bindPopup(qcPopup(f.properties), { maxWidth: 300 });
+                    layer.on({ mouseover: highlightFeature, mouseout: e => leafletLayer.resetStyle(e.target) });
+                }
+            });
+        }
+
         layerObjects[config.id] = { leafletLayer, config, visible: config.visible, data };
-        if (config.visible) { leafletLayer.addTo(map); map.fitBounds(leafletLayer.getBounds(), { padding: [30, 30] }); }
-        if (config.id === 'diachinh') { buildLegend(data); buildStats(data); }
-    } catch (err) { console.warn('Chưa có file:', config.file); }
+        if (config.visible) {
+            leafletLayer.addTo(map);
+            map.fitBounds(leafletLayer.getBounds(), { padding: [30, 30] });
+        }
+    } catch (err) { console.warn('Chưa có file:', config.file, err); }
 }
 
-function buildLegend(data) {
-    const counts = {};
-    data.features.forEach(f => { const k = f.properties.KHLOAIDAT||'Khác'; counts[k]=(counts[k]||0)+1; });
+// Build legend for active layer
+function updateLegend() {
     const grid = document.getElementById('legend-grid');
     grid.innerHTML = '';
-    Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([code,count]) => {
-        grid.innerHTML += `<div class="legend-item"><div class="legend-swatch" style="background:${getColor(code)}"></div><span>${code} (${count})</span></div>`;
-    });
+
+    // Priority: show legend for most recently toggled visible layer
+    let activeId = null;
+    for (const config of LAYERS_CONFIG) {
+        const obj = layerObjects[config.id];
+        if (obj && obj.visible) activeId = config.id;
+    }
+    if (!activeId) return;
+
+    let colors, names;
+    if (activeId === 'diachinh') {
+        const counts = {};
+        layerObjects.diachinh.data.features.forEach(f => {
+            const k = f.properties.KHLOAIDAT || 'Khác';
+            counts[k] = (counts[k]||0)+1;
+        });
+        Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([code,count]) => {
+            grid.innerHTML += `<div class="legend-item"><div class="legend-swatch" style="background:${DC_COLORS[code]||'#90a4ae'}"></div><span>${code} (${count})</span></div>`;
+        });
+    } else if (activeId === 'qhpk') {
+        const counts = {};
+        layerObjects.qhpk.data.features.forEach(f => {
+            const k = f.properties.DTSD || 'Khác';
+            counts[k] = (counts[k]||0)+1;
+        });
+        Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([code,count]) => {
+            const name = PK_NAMES[code] || code;
+            grid.innerHTML += `<div class="legend-item"><div class="legend-swatch" style="background:${PK_COLORS[code]||'#90a4ae'}"></div><span>${name} (${count})</span></div>`;
+        });
+    } else if (activeId === 'qhc') {
+        const counts = {};
+        layerObjects.qhc.data.features.forEach(f => {
+            const k = f.properties.TENCHU || 'Khác';
+            counts[k] = (counts[k]||0)+1;
+        });
+        Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 16).forEach(([name,count]) => {
+            grid.innerHTML += `<div class="legend-item"><div class="legend-swatch" style="background:${QC_COLORS[name]||'#90a4ae'}"></div><span>${name} (${count})</span></div>`;
+        });
+    }
 }
 
-function buildStats(data) {
-    let totalDT = 0;
-    data.features.forEach(f => { totalDT += f.properties.DIENTICH||0; });
-    document.getElementById('stats-box').innerHTML = `
-        <div class="stat-row"><span class="stat-label">Tổng số thửa</span><span class="stat-value">${data.features.length.toLocaleString('vi-VN')}</span></div>
-        <div class="stat-row"><span class="stat-label">Tổng diện tích</span><span class="stat-value">${(totalDT/10000).toFixed(1)} ha</span></div>`;
+// Stats
+function updateStats() {
+    const box = document.getElementById('stats-box');
+    let html = '';
+    for (const config of LAYERS_CONFIG) {
+        const obj = layerObjects[config.id];
+        if (obj && obj.visible) {
+            html += `<div class="stat-row"><span class="stat-label">${config.name}</span><span class="stat-value">${obj.data.features.length} đối tượng</span></div>`;
+        }
+    }
+    box.innerHTML = html || '<div style="font-size:12px;color:#999">Bật lớp bản đồ để xem thống kê</div>';
 }
 
+// Layer list UI
 function buildLayerList() {
     const list = document.getElementById('layer-list');
     LAYERS_CONFIG.forEach(config => {
@@ -361,19 +482,31 @@ function buildLayerList() {
             const t = document.getElementById('toggle-'+config.id);
             if (obj.visible) { map.removeLayer(obj.leafletLayer); obj.visible=false; t.classList.remove('on'); }
             else { obj.leafletLayer.addTo(map); obj.visible=true; t.classList.add('on'); }
+            updateLegend();
+            updateStats();
         });
         list.appendChild(item);
     });
 }
 
-buildLayerList();
-Promise.all(LAYERS_CONFIG.map(loadLayer)).then(() => { document.getElementById('loading').classList.add('hidden'); });
+// ============================================================
+// INIT
+// ============================================================
 
-map.on('mousemove', e => { document.getElementById('coord-display').textContent = `${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`; });
+buildLayerList();
+Promise.all(LAYERS_CONFIG.map(loadLayer)).then(() => {
+    document.getElementById('loading').classList.add('hidden');
+    updateLegend();
+    updateStats();
+});
+
+map.on('mousemove', e => {
+    document.getElementById('coord-display').textContent = `${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`;
+});
 
 function zoomToAll() {
     const b = [];
-    Object.values(layerObjects).forEach(o => { if (o.visible) b.push(o.leafletLayer.getBounds()); });
+    Object.values(layerObjects).forEach(o => { if (o.visible && o.leafletLayer.getBounds) b.push(o.leafletLayer.getBounds()); });
     if (b.length) { let c=b[0]; b.slice(1).forEach(x=>c.extend(x)); map.fitBounds(c,{padding:[30,30]}); }
 }
 function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
