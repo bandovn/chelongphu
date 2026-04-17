@@ -207,8 +207,12 @@
                 <span class="basemap-name">OpenStreetMap</span>
             </div>
             <div class="basemap-option" onclick="switchBasemap('satellite')">
-                <div class="basemap-radio selected" id="radio-satellite"></div>
+                <div class="basemap-radio" id="radio-satellite"></div>
                 <span class="basemap-name">Ảnh vệ tinh</span>
+            </div>
+            <div class="basemap-option" onclick="switchBasemap('hybrid')">
+                <div class="basemap-radio selected" id="radio-hybrid"></div>
+                <span class="basemap-name">Vệ tinh + Địa danh</span>
             </div>
             <div class="basemap-option" onclick="switchBasemap('topo')">
                 <div class="basemap-radio" id="radio-topo"></div>
@@ -326,13 +330,33 @@ const map = L.map('map', { center: [20.9455, 105.5554], zoom: 15, zoomControl: f
 L.control.zoom({ position: 'topright' }).addTo(map);
 L.control.scale({ imperial: false, position: 'bottomright' }).addTo(map);
 
+// Bản đồ nền — nhãn địa danh có thể chồng lên ảnh vệ tinh
+const labelsOverlay = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '© Esri', maxZoom: 19, pane: 'overlayPane'
+});
+
+const transportOverlay = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '© Esri', maxZoom: 19, pane: 'overlayPane'
+});
+
 const basemaps = {
-    osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }),
-    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri', maxZoom: 19 }),
-    topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: '© OpenTopoMap', maxZoom: 17 })
+    osm: L.layerGroup([
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 })
+    ]),
+    satellite: L.layerGroup([
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri', maxZoom: 19 })
+    ]),
+    hybrid: L.layerGroup([
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri', maxZoom: 19 }),
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri', maxZoom: 19 }),
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { attribution: '© Esri', maxZoom: 19 })
+    ]),
+    topo: L.layerGroup([
+        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: '© OpenTopoMap', maxZoom: 17 })
+    ])
 };
-basemaps.satellite.addTo(map);
-let currentBasemap = 'satellite';
+basemaps.hybrid.addTo(map);
+let currentBasemap = 'hybrid';
 
 function switchBasemap(name) {
     map.removeLayer(basemaps[currentBasemap]);
