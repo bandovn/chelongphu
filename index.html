@@ -121,6 +121,17 @@
             font-variant-numeric: tabular-nums;
         }
 
+        .credit-box {
+            position: absolute; bottom: 12px; left: 12px; z-index: 500;
+            background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+            padding: 8px 12px; border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .credit-logo { height: 32px; border-radius: 4px; }
+        .credit-text { font-size: 9.5px; line-height: 1.5; color: #455a64; }
+        .credit-text strong { color: #1a3c52; font-weight: 600; }
+
         .leaflet-popup-content-wrapper {
             border-radius: 10px !important; font-family: 'Be Vietnam Pro', sans-serif !important;
             box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
@@ -158,6 +169,9 @@
             }
             .sidebar.open { transform: translateX(0); }
             .sidebar-toggle { display: flex; }
+            .credit-box { bottom: 6px; left: 6px; padding: 5px 8px; }
+            .credit-logo { height: 24px; }
+            .credit-text { font-size: 8px; }
         }
     </style>
 </head>
@@ -173,7 +187,7 @@
         <div class="header-logo">🗺️</div>
         <div>
             <h1>ỦY BAN NHÂN DÂN XÃ PHÚ CÁT</h1>
-            <h2>Bản đồ khu vực Công ty CP Chè Long Phú</h2>
+            <h2>Bản đồ Khu vực Công ty CP Chè Long Phú</h2>
         </div>
     </div>
     <div class="header-right">
@@ -226,6 +240,13 @@
 
     <div id="map"></div>
     <div class="coord-display" id="coord-display">Di chuyển chuột để xem tọa độ</div>
+    <div class="credit-box">
+        <img src="logo.jpg" class="credit-logo" alt="Thanh Hà">
+        <div class="credit-text">
+            <strong>Đơn vị xây dựng:</strong> Công ty CP Tư vấn Ứng dụng<br>và Phát triển Công nghệ Thanh Hà<br>
+            <strong>Liên hệ:</strong> Mr Tuấn — 0911 558 628
+        </div>
+    </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
