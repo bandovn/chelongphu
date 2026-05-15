@@ -449,9 +449,28 @@ function updateCounts() {
 function initNav() {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b===btn));
       const view = btn.dataset.view;
-      ['view-map','view-table','view-dashboard','view-report','view-help','view-contact'].forEach(id => {
+
+      // Tab "Liên hệ" đặc biệt: chỉ hiện info trong rightbar, không đổi view
+      if (view === 'contact') {
+        showContactInRightbar();
+        // Đảm bảo đang ở view bản đồ
+        if (document.getElementById('view-map').classList.contains('hidden')) {
+          // Đang ở view khác, chuyển về map
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'map'));
+          ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
+            document.getElementById(id).classList.toggle('hidden', id !== 'view-map');
+          });
+          setTimeout(()=>state.map && state.map.invalidateSize(), 50);
+        }
+        // Mở rightbar trên mobile
+        if (isMobile()) openMobileRightbar();
+        return;
+      }
+
+      // Các tab khác như cũ
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b===btn));
+      ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
         document.getElementById(id).classList.toggle('hidden', id !== 'view-'+view);
       });
       if (view === 'dashboard') renderDashboard();
@@ -466,6 +485,75 @@ function initNav() {
 function goToContact() {
   const btn = document.querySelector('.nav-btn[data-view="contact"]');
   if (btn) btn.click();
+}
+
+function showContactInRightbar() {
+  const wrap = document.getElementById('thua-detail');
+  wrap.innerHTML = `
+    <div class="contact-card">
+      <div class="contact-header">
+        <img src="logo.jpg" alt="Thanh Hà" class="contact-logo">
+        <div class="contact-header-text">
+          <div class="contact-tag">Đơn vị xây dựng hệ thống</div>
+          <h3 class="contact-name">CÔNG TY CỔ PHẦN TƯ VẤN ỨNG DỤNG VÀ PHÁT TRIỂN CÔNG NGHỆ THANH HÀ</h3>
+        </div>
+      </div>
+
+      <p class="contact-slogan">
+        Tư vấn chuyên sâu về Quản lý, sử dụng đất đai – Điều tra cơ bản đất đai – Thống kê, kiểm kê đất đai, lập bản đồ hiện trạng sử dụng đất – Quy hoạch đất đai – WebGIS – Chuyển đổi số trong quản lý đất đai.
+      </p>
+
+      <div class="contact-services">
+        <span class="contact-chip">📍 Lập phương án SDĐ</span>
+        <span class="contact-chip">🗺️ WebGIS</span>
+        <span class="contact-chip">⚖️ Pháp lý đất đai</span>
+        <span class="contact-chip">📋 Hồ sơ thủ tục</span>
+      </div>
+
+      <div class="contact-info">
+        <div class="contact-info-row">
+          <span class="contact-icon">🏢</span>
+          <div>
+            <div class="contact-label">Trụ sở chính</div>
+            <div class="contact-value">Số 267, Tằng My, xã Phúc Thịnh, TP Hà Nội</div>
+          </div>
+        </div>
+        <div class="contact-info-row">
+          <span class="contact-icon">🏬</span>
+          <div>
+            <div class="contact-label">Chi nhánh văn phòng</div>
+            <div class="contact-value">HH2D Xuân Mai Complex, P. Yên Nghĩa, TP Hà Nội</div>
+          </div>
+        </div>
+        <div class="contact-info-row">
+          <span class="contact-icon">✉️</span>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:thanhha.dacjsc@gmail.com">thanhha.dacjsc@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-info-row">
+          <span class="contact-icon">📞</span>
+          <div>
+            <div class="contact-label">Điện thoại</div>
+            <div class="contact-value">
+              <a href="tel:0911558628"><strong>0911 558 628</strong></a>
+              <div class="contact-person">Ông Phạm Văn Tuấn</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-actions">
+        <a href="tel:0911558628" class="btn btn-primary contact-btn-call">📞 Gọi</a>
+        <a href="mailto:thanhha.dacjsc@gmail.com?subject=Liên hệ tư vấn từ WebGIS Long Phú" class="btn contact-btn-email">✉️ Email</a>
+      </div>
+
+      <p class="contact-note">
+        Quý cơ quan, đơn vị, hộ dân và đối tác có nhu cầu tư vấn rà soát đất đai, lập phương án sử dụng đất, đối chiếu quy hoạch, xây dựng WebGIS hoặc số hóa hồ sơ địa chính... vui lòng liên hệ trực tiếp để được hỗ trợ.
+      </p>
+    </div>
+  `;
 }
 
 function renderAll() {
@@ -543,7 +631,7 @@ function renderTable() {
     tr.addEventListener('click', () => {
       // Chuyển sang map view và select
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view==='map'));
-      ['view-map','view-table','view-dashboard','view-report','view-help','view-contact'].forEach(id => {
+      ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
         document.getElementById(id).classList.toggle('hidden', id !== 'view-map');
       });
       setTimeout(()=>{ if (state.map) state.map.invalidateSize(); selectThua(tr.dataset.id, null); }, 60);
@@ -1053,7 +1141,7 @@ function renderReport() {
 
 function goToThua(id) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'map'));
-  ['view-map','view-table','view-dashboard','view-report','view-help','view-contact'].forEach(elid => {
+  ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(elid => {
     document.getElementById(elid).classList.toggle('hidden', elid !== 'view-map');
   });
   setTimeout(()=>{

@@ -94,6 +94,19 @@ input, select, textarea { font-family: inherit; }
   box-shadow: 0 2px 6px rgba(15,110,86,0.25);
 }
 
+/* Nút Liên hệ - style nổi bật riêng (không phải tab switching) */
+.topbar .nav-btn[data-view="contact"] {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.topbar .nav-btn[data-view="contact"]:hover {
+  background: var(--primary-dk, #0a5746);
+  color: white;
+  border-color: var(--primary-dk, #0a5746);
+}
+
 /* ===== Main grid ===== */
 .main {
   display: grid;
@@ -695,38 +708,27 @@ table.simple th.num, table.simple td.num { text-align: right; font-variant-numer
   min-width: 220px;
 }
 
-/* ===== VIEW: LIÊN HỆ ===== */
-.view-contact {
-  background: var(--bg-page);
-  padding: 24px;
-  overflow-y: auto;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-.view-contact.hidden { display: none; }
-
+/* ===== Card Liên hệ trong RIGHTBAR (gọn cho 300px) ===== */
 .contact-card {
   background: linear-gradient(180deg, #ffffff 0%, #f4faf7 100%);
   border: 1px solid #c8e0d4;
   border-left: 3px solid var(--accent);
-  border-radius: 10px;
-  padding: 22px 24px;
-  box-shadow: 0 3px 14px rgba(15, 110, 86, 0.1);
-  max-width: 680px;
-  width: 100%;
+  border-radius: 8px;
+  padding: 12px 13px;
+  box-shadow: 0 2px 6px rgba(15, 110, 86, 0.08);
+  font-size: 12px;
 }
 
 .contact-header {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-  padding-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
   border-bottom: 0.5px solid #d4e8de;
 }
 .contact-logo {
-  width: 64px;
+  width: 40px;
   height: auto;
   flex-shrink: 0;
 }
@@ -736,78 +738,84 @@ table.simple th.num, table.simple td.num { text-align: right; font-variant-numer
 }
 .contact-tag {
   text-transform: uppercase;
-  font-size: 10.5px;
+  font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--text-tertiary);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 .contact-name {
-  font-size: 14.5px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1.35;
   margin: 0;
   color: var(--accent);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
 }
 
 .contact-slogan {
-  font-size: 12.5px;
+  font-size: 11px;
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
   text-align: justify;
 }
 
 .contact-services {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 18px;
+  gap: 4px;
+  margin-bottom: 12px;
 }
 .contact-chip {
-  font-size: 11.5px;
-  padding: 4px 10px;
+  font-size: 10px;
+  padding: 2px 7px;
   background: var(--accent-soft);
   color: var(--accent);
-  border-radius: 14px;
+  border-radius: 10px;
   white-space: nowrap;
   font-weight: 500;
 }
 
-/* Thông tin chi tiết */
 .contact-info {
   border-top: 0.5px dashed #d4e8de;
-  padding-top: 14px;
-  margin-bottom: 16px;
+  padding-top: 10px;
+  margin-bottom: 10px;
 }
 .contact-info-row {
   display: flex;
-  gap: 12px;
-  padding: 7px 0;
+  gap: 8px;
+  padding: 5px 0;
   align-items: flex-start;
 }
 .contact-info-row + .contact-info-row {
   border-top: 0.5px dashed #eef2ee;
 }
 .contact-icon {
-  font-size: 18px;
+  font-size: 14px;
   flex-shrink: 0;
-  width: 28px;
+  width: 20px;
   text-align: center;
+  margin-top: 1px;
+}
+.contact-info-row > div {
+  flex: 1;
+  min-width: 0;
 }
 .contact-label {
-  font-size: 10.5px;
+  font-size: 9.5px;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   color: var(--text-tertiary);
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 .contact-value {
-  font-size: 13px;
+  font-size: 11.5px;
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.45;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .contact-value a {
   color: var(--accent);
@@ -817,29 +825,28 @@ table.simple th.num, table.simple td.num { text-align: right; font-variant-numer
 .contact-value a:hover { text-decoration: underline; }
 .contact-person {
   color: var(--text-secondary);
-  font-size: 12.5px;
+  font-size: 10.5px;
+  margin-top: 1px;
 }
 
 .contact-actions {
   display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 .contact-btn-call,
 .contact-btn-email {
   flex: 1;
-  min-width: 140px;
-  padding: 10px 16px;
-  font-size: 13px;
+  padding: 7px 8px;
+  font-size: 11.5px;
   font-weight: 600;
   text-decoration: none;
   text-align: center;
-  border-radius: 8px;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
 }
 .contact-btn-call {
   background: var(--accent);
@@ -855,30 +862,26 @@ table.simple th.num, table.simple td.num { text-align: right; font-variant-numer
 .contact-btn-email:hover { background: var(--accent-soft); }
 
 .contact-note {
-  font-size: 11.5px;
+  font-size: 10.5px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.55;
   margin: 0;
-  padding-top: 12px;
+  padding-top: 10px;
   border-top: 0.5px dashed #d4e8de;
   font-style: italic;
   text-align: justify;
 }
 
 @media (max-width: 768px) {
-  .view-contact { padding: 12px; }
-  .contact-card { padding: 16px; }
-  .contact-header { gap: 10px; }
-  .contact-logo { width: 48px; }
-  .contact-name { font-size: 12.5px; }
-  .contact-services { gap: 4px; }
-  .contact-chip { font-size: 10.5px; padding: 3px 8px; }
-  .contact-info-row { gap: 8px; }
-  .contact-icon { font-size: 16px; width: 22px; }
-  .contact-value { font-size: 12px; }
-  .contact-person { display: block; margin-top: 1px; font-size: 11.5px; }
   .help-cta { flex-direction: column; align-items: stretch; }
   .help-cta .btn { width: 100%; }
+  /* Trong mobile rightbar full chiều rộng, contact-card có thể to hơn */
+  .contact-card { padding: 14px 16px; font-size: 13px; }
+  .contact-logo { width: 48px; }
+  .contact-name { font-size: 12.5px; }
+  .contact-slogan { font-size: 12px; }
+  .contact-value { font-size: 12.5px; }
+  .contact-chip { font-size: 11px; padding: 3px 8px; }
 }
 
 /* ===== Preview ảnh trong panel cập nhật ===== */
