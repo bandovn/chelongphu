@@ -26,6 +26,7 @@
     <button class="nav-btn" data-view="dashboard"><span class="nav-icon">📊</span><span class="nav-text">Thống kê</span></button>
     <button class="nav-btn" data-view="report"><span class="nav-icon">📋</span><span class="nav-text">Biểu rà soát</span></button>
     <button class="nav-btn" data-view="help"><span class="nav-icon">📘</span><span class="nav-text">Hướng dẫn</span></button>
+    <button class="nav-btn" data-view="contact"><span class="nav-icon">📞</span><span class="nav-text">Liên hệ</span></button>
   </header>
 
   <main class="main">
@@ -358,32 +359,83 @@
         <p>Thông tư 07/2015/TT-BTNMT đã bị bãi bỏ bởi Thông tư 20/2024 từ 01/01/2025, hiện chưa có thông tư mới thay thế. Hệ thống chỉ phục vụ rà soát nội bộ; các phương án phải tuân thủ pháp luật hiện hành tại thời điểm trình duyệt.</p>
       </div>
 
-      <!-- Khối thông tin liên hệ Thanh Hà - dành cho hộ dân/chủ SD tìm tư vấn -->
-      <div class="thanha-promo">
-        <div class="thanha-promo-header">
-          <img src="logo.jpg" alt="Thanh Hà" class="thanha-promo-logo">
-          <div class="thanha-promo-titles">
-            <div class="thanha-promo-tag">Đơn vị xây dựng hệ thống</div>
-            <h3 class="thanha-promo-name">CÔNG TY CỔ PHẦN TƯ VẤN ỨNG DỤNG VÀ PHÁT TRIỂN CÔNG NGHỆ THANH HÀ</h3>
+      <!-- Lời mời liên hệ ngắn gọn ở cuối Hướng dẫn -->
+      <div class="help-cta">
+        <span>Cần tư vấn chuyên sâu về đất đai, quy hoạch, WebGIS?</span>
+        <button class="btn btn-primary" onclick="goToContact()">Liên hệ với chúng tôi →</button>
+      </div>
+    </div>
+
+    <!-- ========== VIEW: LIÊN HỆ ========== -->
+    <div class="view-contact hidden" id="view-contact">
+      <div class="contact-card">
+        <!-- Header -->
+        <div class="contact-header">
+          <img src="logo.jpg" alt="Thanh Hà" class="contact-logo">
+          <div class="contact-header-text">
+            <div class="contact-tag">Đơn vị xây dựng hệ thống</div>
+            <h1 class="contact-name">CÔNG TY CỔ PHẦN TƯ VẤN ỨNG DỤNG<br>VÀ PHÁT TRIỂN CÔNG NGHỆ THANH HÀ</h1>
           </div>
         </div>
 
-        <p class="thanha-promo-slogan">
+        <!-- Mô tả -->
+        <p class="contact-slogan">
           Tư vấn chuyên sâu về Quản lý, sử dụng đất đai – Điều tra cơ bản đất đai – Thống kê, kiểm kê đất đai, lập bản đồ hiện trạng sử dụng đất – Quy hoạch đất đai – WebGIS – Chuyển đổi số trong quản lý đất đai.
         </p>
 
-        <div class="thanha-promo-services">
-          <span class="thanha-promo-chip">📍 Lập phương án sử dụng đất</span>
-          <span class="thanha-promo-chip">🗺️ WebGIS &amp; bản đồ địa chính</span>
-          <span class="thanha-promo-chip">⚖️ Tư vấn pháp lý đất đai</span>
-          <span class="thanha-promo-chip">📋 Hồ sơ thủ tục đất đai</span>
+        <!-- Dịch vụ -->
+        <div class="contact-services">
+          <span class="contact-chip">📍 Lập phương án sử dụng đất</span>
+          <span class="contact-chip">🗺️ WebGIS &amp; bản đồ địa chính</span>
+          <span class="contact-chip">⚖️ Tư vấn pháp lý đất đai</span>
+          <span class="contact-chip">📋 Hồ sơ thủ tục đất đai</span>
         </div>
 
-        <div class="thanha-promo-contact">
-          <span class="thanha-promo-contact-label">Liên hệ:</span>
-          <strong class="thanha-promo-contact-name">Ông Phạm Văn Tuấn</strong>
-          <a href="tel:0911558628" class="thanha-promo-phone">📞 0911 558 628</a>
+        <!-- Thông tin liên hệ chi tiết -->
+        <div class="contact-info">
+          <div class="contact-info-row">
+            <span class="contact-icon">🏢</span>
+            <div>
+              <div class="contact-label">Trụ sở chính</div>
+              <div class="contact-value">Số 267, Tằng My, xã Phúc Thịnh, thành phố Hà Nội</div>
+            </div>
+          </div>
+          <div class="contact-info-row">
+            <span class="contact-icon">🏬</span>
+            <div>
+              <div class="contact-label">Chi nhánh văn phòng</div>
+              <div class="contact-value">HH2D Xuân Mai Complex, Phường Yên Nghĩa, thành phố Hà Nội</div>
+            </div>
+          </div>
+          <div class="contact-info-row">
+            <span class="contact-icon">✉️</span>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value"><a href="mailto:thanhha.dacjsc@gmail.com">thanhha.dacjsc@gmail.com</a></div>
+            </div>
+          </div>
+          <div class="contact-info-row">
+            <span class="contact-icon">📞</span>
+            <div>
+              <div class="contact-label">Điện thoại liên hệ</div>
+              <div class="contact-value">
+                <a href="tel:0911558628"><strong>0911 558 628</strong></a>
+                <span class="contact-person"> — Ông Phạm Văn Tuấn</span>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Nút action -->
+        <div class="contact-actions">
+          <a href="tel:0911558628" class="btn btn-primary contact-btn-call">📞 Gọi ngay</a>
+          <a href="mailto:thanhha.dacjsc@gmail.com?subject=Liên hệ tư vấn từ WebGIS Long Phú" class="btn contact-btn-email">✉️ Gửi email</a>
+        </div>
+
+        <!-- Note nhẹ nhàng -->
+        <p class="contact-note">
+          Quý cơ quan, đơn vị, hộ dân và đối tác có nhu cầu tư vấn rà soát đất đai, lập phương án sử dụng đất, đối chiếu quy hoạch, xây dựng WebGIS hoặc số hóa hồ sơ địa chính... vui lòng liên hệ trực tiếp để được hỗ trợ.
+        </p>
       </div>
     </div>
 

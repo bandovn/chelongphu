@@ -451,7 +451,7 @@ function initNav() {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b===btn));
       const view = btn.dataset.view;
-      ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
+      ['view-map','view-table','view-dashboard','view-report','view-help','view-contact'].forEach(id => {
         document.getElementById(id).classList.toggle('hidden', id !== 'view-'+view);
       });
       if (view === 'dashboard') renderDashboard();
@@ -461,6 +461,11 @@ function initNav() {
       if (view === 'map' && state.map) setTimeout(()=>state.map.invalidateSize(), 50);
     });
   });
+}
+
+function goToContact() {
+  const btn = document.querySelector('.nav-btn[data-view="contact"]');
+  if (btn) btn.click();
 }
 
 function renderAll() {
@@ -538,7 +543,7 @@ function renderTable() {
     tr.addEventListener('click', () => {
       // Chuyển sang map view và select
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view==='map'));
-      ['view-map','view-table','view-dashboard','view-help'].forEach(id => {
+      ['view-map','view-table','view-dashboard','view-report','view-help','view-contact'].forEach(id => {
         document.getElementById(id).classList.toggle('hidden', id !== 'view-map');
       });
       setTimeout(()=>{ if (state.map) state.map.invalidateSize(); selectThua(tr.dataset.id, null); }, 60);
@@ -1048,7 +1053,7 @@ function renderReport() {
 
 function goToThua(id) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'map'));
-  ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(elid => {
+  ['view-map','view-table','view-dashboard','view-report','view-help','view-contact'].forEach(elid => {
     document.getElementById(elid).classList.toggle('hidden', elid !== 'view-map');
   });
   setTimeout(()=>{
