@@ -292,13 +292,34 @@ function selectThua(id, layer) {
   const feature = state.features.find(f => f.properties.id === id);
   if (!feature) return;
 
-  // Highlight
-  state.geojsonLayer.eachLayer(l => state.geojsonLayer.resetStyle(l));
+  // Nếu không truyền layer, tự tìm trong geojsonLayer hiện tại
+  // (xảy ra khi click từ bảng Tra cứu hoặc Biểu rà soát)
+  if (!layer && state.geojsonLayer) {
+    state.geojsonLayer.eachLayer(l => {
+      if (l.feature && l.feature.properties.id === id) {
+        layer = l;
+      }
+    });
+  }
+
+  // Reset style các layer khác
+  if (state.geojsonLayer) {
+    state.geojsonLayer.eachLayer(l => state.geojsonLayer.resetStyle(l));
+  }
+
+  // Highlight + zoom đến thửa được chọn
   if (layer) {
     layer.setStyle({ weight: 3, color: '#ffd966' });
     layer.bringToFront();
     state.map.fitBounds(layer.getBounds(), { padding: [60,60], maxZoom: 19 });
+  } else if (feature.geometry) {
+    // Fallback: nếu thửa bị filter ẩn, vẫn zoom đến tọa độ
+    try {
+      const tmpLayer = L.geoJSON(feature);
+      state.map.fitBounds(tmpLayer.getBounds(), { padding: [60,60], maxZoom: 19 });
+    } catch(e) {}
   }
+
   renderThuaDetail(feature);
 
   // Mobile: tự động mở rightbar
@@ -633,7 +654,10 @@ function renderTable() {
       ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
         document.getElementById(id).classList.toggle('hidden', id !== 'view-map');
       });
-      setTimeout(()=>{ if (state.map) state.map.invalidateSize(); selectThua(tr.dataset.id, null); }, 60);
+      setTimeout(()=>{
+        if (state.map) state.map.invalidateSize();
+        selectThua(tr.dataset.id, null);
+      }, 120);
     });
   });
 
@@ -852,6 +876,7 @@ async function toggleQhLayer(key, checked) {
     }
     opacityWrap.style.display = 'none';
     legendEl.style.display = 'none';
+    updatePaneZIndex();
     return;
   }
 
@@ -900,10 +925,29 @@ async function toggleQhLayer(key, checked) {
   }
 
   qhLayers[key].layer.addTo(state.map);
-  // Pane 'qhPane' đã có z-index 350 < overlayPane 400 → thửa đất tự động ở trên
+  updatePaneZIndex();
 
   opacityWrap.style.display = 'flex';
   legendEl.style.display = 'block';
+}
+
+/**
+ * Cập nhật z-index của pane QH theo trạng thái lớp:
+ * - Có ít nhất 1 lớp QH đang bật → QH trên cùng (450 > overlayPane 400)
+ *   → click vào ô QH thấy popup QH, không phải thửa đất
+ * - Tất cả QH đều tắt → QH dưới thửa đất (350)
+ *   → click ưu tiên thửa đất (như mặc định)
+ *
+ * Khi nhiều lớp QH cùng bật, lớp bật SAU sẽ nhận click trước
+ * (vì add sau trong cùng pane Canvas).
+ */
+function updatePaneZIndex() {
+  const pane = state.map.getPane('qhPane');
+  if (!pane) return;
+  const anyOn = Object.keys(qhLayers).some(k =>
+    qhLayers[k].layer && state.map.hasLayer(qhLayers[k].layer)
+  );
+  pane.style.zIndex = anyOn ? 450 : 350;
 }
 
 function setQhOpacity(key, val) {
@@ -1146,7 +1190,7 @@ function goToThua(id) {
   setTimeout(()=>{
     if (state.map) state.map.invalidateSize();
     selectThua(id, null);
-  }, 60);
+  }, 120);
 }
 
 function deleteEdit(id) {
