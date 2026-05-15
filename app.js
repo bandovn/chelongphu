@@ -453,16 +453,15 @@ function initNav() {
 
       // Tab "Liên hệ" đặc biệt: chỉ hiện info trong rightbar, không đổi view
       if (view === 'contact') {
+        // LUÔN chuyển về view bản đồ trước (vì rightbar chỉ có ở view map)
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'map'));
+        ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
+          document.getElementById(id).classList.toggle('hidden', id !== 'view-map');
+        });
+        // Render contact vào rightbar
         showContactInRightbar();
-        // Đảm bảo đang ở view bản đồ
-        if (document.getElementById('view-map').classList.contains('hidden')) {
-          // Đang ở view khác, chuyển về map
-          document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'map'));
-          ['view-map','view-table','view-dashboard','view-report','view-help'].forEach(id => {
-            document.getElementById(id).classList.toggle('hidden', id !== 'view-map');
-          });
-          setTimeout(()=>state.map && state.map.invalidateSize(), 50);
-        }
+        // Fix map size
+        setTimeout(()=>state.map && state.map.invalidateSize(), 50);
         // Mở rightbar trên mobile
         if (isMobile()) openMobileRightbar();
         return;
@@ -550,7 +549,7 @@ function showContactInRightbar() {
       </div>
 
       <p class="contact-note">
-        Quý cơ quan, đơn vị, hộ dân và đối tác có nhu cầu tư vấn rà soát đất đai, lập phương án sử dụng đất, đối chiếu quy hoạch, xây dựng WebGIS hoặc số hóa hồ sơ địa chính... vui lòng liên hệ trực tiếp để được hỗ trợ.
+        Quý cơ quan, đơn vị và đối tác có nhu cầu tư vấn rà soát đất đai, lập phương án sử dụng đất, đối chiếu quy hoạch, xây dựng WebGIS hoặc số hóa hồ sơ địa chính... vui lòng liên hệ trực tiếp để được hỗ trợ.
       </p>
     </div>
   `;
