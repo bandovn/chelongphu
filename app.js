@@ -202,6 +202,13 @@ function initMap() {
     fadeAnimation: false,
   }).setView([20.952, 105.553], 14);
 
+  // Tạo pane riêng cho QH layers - z-index THẤP hơn overlayPane mặc định (400)
+  // → QH nằm dưới thửa đất, click vẫn vào thửa đất được
+  state.map.createPane('qhPane');
+  state.map.getPane('qhPane').style.zIndex = 350;
+  // Renderer riêng cho QH pane
+  state.qhRenderer = L.canvas({ pane: 'qhPane' });
+
   // Dùng OpenStreetMap + ArcGIS giống Việt Mông (đã verify chạy được)
   const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -703,10 +710,17 @@ async function loadQhData(key) {
   if (qhLayers[key].data) return qhLayers[key].data;
   if (qhLayers[key].loading) return null;
   qhLayers[key].loading = true;
-  const url = key === 'phankhu' ? 'qh_phankhu.geojson' : 'qh_chung.geojson';
+  const fileName = key === 'phankhu' ? 'qh_phankhu.geojson' : 'qh_chung.geojson';
+  // Thử cả cùng folder và data/
+  let res, lastErr;
+  for (const u of [fileName, 'data/' + fileName]) {
+    try {
+      res = await fetch(u);
+      if (res.ok) break;
+    } catch(e) { lastErr = e; }
+  }
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Không tải được ' + url);
+    if (!res || !res.ok) throw new Error('Không tìm thấy ' + fileName);
     const data = await res.json();
     qhLayers[key].data = data;
     qhLayers[key].loading = false;
@@ -766,7 +780,9 @@ async function toggleQhLayer(key, checked) {
   if (!qhLayers[key].layer) {
     const data = qhLayers[key].data;
     qhLayers[key].layer = L.geoJSON(data, {
-      renderer: L.canvas(),
+      pane: 'qhPane',
+      renderer: state.qhRenderer,
+      interactive: true,
       style: f => qhStyle(key, f.properties),
       onEachFeature: (f, layer) => {
         const p = f.properties;
@@ -792,8 +808,7 @@ async function toggleQhLayer(key, checked) {
   }
 
   qhLayers[key].layer.addTo(state.map);
-  // Đảm bảo layer thửa đất vẫn ở trên cùng để click được
-  if (state.geojsonLayer) state.geojsonLayer.bringToFront();
+  // Pane 'qhPane' đã có z-index 350 < overlayPane 400 → thửa đất tự động ở trên
 
   opacityWrap.style.display = 'flex';
   legendEl.style.display = 'block';

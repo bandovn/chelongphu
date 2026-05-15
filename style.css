@@ -343,19 +343,19 @@ input, select, textarea { font-family: inherit; }
 /* ===== Logo Thanh Hà đặt ở dưới cùng sidebar ===== */
 .thanha-footer {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 12px;
   border-top: 0.5px solid var(--border);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .thanha-footer img {
-  height: 36px;
+  height: 32px;
   width: auto;
   flex-shrink: 0;
 }
 .thanha-footer .th-text {
-  font-size: 10.5px;
+  font-size: 10px;
   line-height: 1.3;
   color: var(--text-secondary);
   min-width: 0;
@@ -363,27 +363,28 @@ input, select, textarea { font-family: inherit; }
 }
 .thanha-footer .th-line1 {
   text-transform: uppercase;
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 600;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   color: var(--text-tertiary);
   margin-bottom: 1px;
 }
 .thanha-footer .th-line2 {
   font-weight: 600;
   color: var(--accent);
-  font-size: 10.5px;
+  font-size: 10px;
   margin-bottom: 3px;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 .thanha-footer .th-line3 {
-  font-size: 11px;
+  font-size: 9.5px;
   color: var(--accent);
   font-weight: 700;
   background: var(--accent-soft);
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 1px 5px;
+  border-radius: 3px;
   display: inline-block;
+  white-space: nowrap;
 }
 
 /* Sidebar dùng flex để Thanh Hà đẩy xuống dưới cùng */
@@ -673,6 +674,118 @@ table.simple th.num, table.simple td.num { text-align: right; font-variant-numer
 .help-section p { font-size: 13px; margin-bottom: 8px; line-height: 1.65; }
 .help-section ul, .help-section ol { margin-left: 20px; font-size: 13px; line-height: 1.65; }
 .help-section li { margin-bottom: 4px; }
+
+/* ===== Khối quảng cáo Thanh Hà ở cuối tab Hướng dẫn ===== */
+.thanha-promo {
+  margin-top: 18px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0F6E56 0%, #15936F 60%, #1FB388 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(15, 110, 86, 0.25);
+}
+.thanha-promo-inner {
+  padding: 22px 24px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+.thanha-promo-logo {
+  width: 80px;
+  height: auto;
+  background: white;
+  padding: 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.thanha-promo-text { flex: 1; min-width: 0; }
+.thanha-promo-tag {
+  text-transform: uppercase;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+.thanha-promo-name {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 8px 0;
+  color: white;
+  letter-spacing: 0.2px;
+}
+.thanha-promo-slogan {
+  font-size: 12.5px;
+  opacity: 0.92;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+.thanha-promo-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.thanha-promo-chip {
+  font-size: 11px;
+  padding: 3px 9px;
+  background: rgba(255,255,255,0.18);
+  border: 0.5px solid rgba(255,255,255,0.3);
+  border-radius: 14px;
+  white-space: nowrap;
+}
+.thanha-promo-contact {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  padding-top: 12px;
+  border-top: 0.5px solid rgba(255,255,255,0.25);
+}
+.thanha-promo-contact-item { font-size: 12.5px; }
+.thanha-promo-label {
+  opacity: 0.75;
+  font-size: 11px;
+  margin-right: 4px;
+}
+.thanha-promo-phone {
+  background: white;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 7px 16px;
+  border-radius: 24px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+.thanha-promo-phone:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.thanha-promo-note {
+  font-size: 11.5px;
+  opacity: 0.85;
+  line-height: 1.55;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 0.5px dashed rgba(255,255,255,0.25);
+  font-style: italic;
+}
+@media (max-width: 768px) {
+  .thanha-promo-inner { flex-direction: column; padding: 18px; gap: 14px; }
+  .thanha-promo-logo { width: 64px; }
+  .thanha-promo-name { font-size: 13.5px; }
+  .thanha-promo-services { gap: 4px; }
+  .thanha-promo-chip { font-size: 10.5px; padding: 2px 7px; }
+}
 
 /* ===== Preview ảnh trong panel cập nhật ===== */
 .img-preview-grid {
